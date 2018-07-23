@@ -1,0 +1,69 @@
+// Если спецпроект интегрирован в сайт, из media queries обычно хватает только двух: mobile и not_mobile
+@import 'mq'
+
+@import 'functions'
+@import 'keyframes'
+
+// base.styl подключается только в том случае, когда спецпроект расположен на отдельной странице
+// @import 'base'
+
+$colors = {
+    white: #ffffff,
+    black: #000000
+}
+
+// FYI: на десктопе на странице статьи максимальная ширина контейнера — 1060px. В ленте сайта — 640px.
+// Мобильная версия начинается с 679px, и там ограничений по ширине нет
+
+// Название класса рекомендуется выбирать так, чтобы точно не было конфликтов с существующими спецпроектами.
+// Обычно имени проекта достаточно
+.specialContainer
+    font-size: 16px
+    line-height: 1.5em
+    padding: 15px
+    border: 1px solid $colors.black
+    width: 100%
+    max-width: 600px
+    text-align: center
+    margin: auto
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+    @media $mq.not_mobile
+        font-size: 18px
+        padding: 50px
+
+    svg
+        display: block
+        fill: currentColor
+
+    // Для подобных элементов придется сбрасывать стили, если спецпроект не на отдельной странице
+    input,
+    button
+        box-sizing: border-box
+        display: block
+        width: 200px
+        padding: 10px
+        margin: 5px 0
+
+    .likely
+        display: flex
+
+        &__widget
+            display: flex
+            align-items: center
+            justify-content: center
+            background-color: transparent
+            border: 1px solid
+            height: 40px
+            padding: 0 10px
+            margin: 0 2px
+            color: inherit
+
+        &__icon
+            background-color: transparent
+
+            svg
+                display: block

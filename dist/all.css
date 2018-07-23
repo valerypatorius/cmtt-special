@@ -1,0 +1,62 @@
+.specialContainer {
+  font-size: 16px;
+  line-height: 1.5em;
+  padding: 15px;
+  border: 1px solid #000;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  margin: auto;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-align: center;
+      align-items: center;
+  -ms-flex-pack: center;
+      justify-content: center;
+}
+@media (min-width: 680px) {
+  .specialContainer {
+    font-size: 18px;
+    padding: 50px;
+  }
+}
+.specialContainer svg {
+  display: block;
+  fill: currentColor;
+}
+.specialContainer input,
+.specialContainer button {
+  box-sizing: border-box;
+  display: block;
+  width: 200px;
+  padding: 10px;
+  margin: 5px 0;
+}
+.specialContainer .likely {
+  display: -ms-flexbox;
+  display: flex;
+}
+.specialContainer .likely__widget {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  -ms-flex-pack: center;
+      justify-content: center;
+  background-color: transparent;
+  border: 1px solid;
+  height: 40px;
+  padding: 0 10px;
+  margin: 0 2px;
+  color: inherit;
+}
+.specialContainer .likely__icon {
+  background-color: transparent;
+}
+.specialContainer .likely__icon svg {
+  display: block;
+}
+
+/*# sourceMappingURL=all.css.map*/
