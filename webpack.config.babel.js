@@ -103,5 +103,3 @@ export default {
     devtool: !isProduction ? 'source-map' : false,
     plugins,
 };
-
-console.log(Autoprefixer.info());
