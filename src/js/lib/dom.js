@@ -1,17 +1,19 @@
 /**
- * Make html element
+ * Make html element with given properties
+ *
  * @param {String} tagName
- * @param {Array|String} classNames - array of classnames or string for single classname
- * @param {Object} attributes - object with html attributes
+ * @param {Array|String} classNames - Array of classnames or single classname string
+ * @param {Object} attributes - Object with html attributes
+ * @returns {Element}
  */
 export const makeElement = (tagName, classNames = [], attributes = []) => {
     tagName = tagName.toLowerCase();
 
-    let element = document.createElement(tagName);
+    const element = document.createElement(tagName);
 
     if (classNames) {
         if (typeof classNames === 'object') {
-            classNames.forEach(cname => {
+            classNames.forEach((cname) => {
                 element.classList.add(cname);
             });
         } else if (typeof classNames === 'string') {
@@ -19,31 +21,35 @@ export const makeElement = (tagName, classNames = [], attributes = []) => {
         }
     }
 
-    for (let attr in attributes) {
-        if (attr === 'data') {
-            let dataAttributes = attributes[attr];
+    const attributesKeys = Object.keys(attributes);
 
-            for (let attr in dataAttributes) {
-                element.dataset[attr] = dataAttributes[attr];
-            }
+    attributesKeys.forEach((key) => {
+        if (key === 'data') {
+            const dataAttributes = attributes[key];
+            const dataAttributesKeys = Object.keys(dataAttributes);
+
+            dataAttributesKeys.forEach((key) => {
+                element.dataset[key] = dataAttributes[key];
+            });
         } else {
-            element[attr] = attributes[attr];
+            element[key] = attributes[key];
         }
-    }
+    });
 
     return element;
 };
 
 /**
  * Cache elements with [data-view] attribute and put them in given object
- * @param {Object} obj - object
+ *
+ * @param {Object} obj - Object to store elements
  */
 export const cacheElements = (obj, attr = 'view') => {
-    let newObj = {},
-        elements = document.querySelectorAll(`[data-${attr}]`);
+    const newObj = {};
+    const elements = document.querySelectorAll(`[data-${attr}]`);
 
-    Array.prototype.forEach.call(elements, el => {
-        let name = el.dataset[attr];
+    Array.prototype.forEach.call(elements, (el) => {
+        const name = el.dataset[attr];
         newObj[name] = el;
     });
 
@@ -52,14 +58,18 @@ export const cacheElements = (obj, attr = 'view') => {
 
 /**
  * Get all siblings of specified element, excluding this element
+ *
  * @param {Element} element
+ * @returns {Array}
  */
 export const getSiblings = (element) => {
-    let siblings = [],
-        sibling = element.parentNode.firstChild;
+    const siblings = [];
+    let sibling = element.parentNode.firstChild;
 
     for (; sibling; sibling = sibling.nextSibling) {
-        if (sibling.nodeType !== 1 || sibling === element) continue;
+        if (sibling.nodeType !== 1 || sibling === element) {
+            continue;
+        }
         siblings.push(sibling);
     }
 
@@ -68,6 +78,7 @@ export const getSiblings = (element) => {
 
 /**
  * Remove all children from element
+ *
  * @param {Element} parent
  */
 export const removeChildren = (parent) => {
@@ -78,6 +89,7 @@ export const removeChildren = (parent) => {
 
 /**
  * Remove specified element from its parent
+ *
  * @param {Element} element
  */
 export const removeElement = (element) => {
@@ -88,10 +100,12 @@ export const removeElement = (element) => {
 
 /**
  * Transform html string to node
+ *
  * @param {String} html
+ * @returns {Element}
  */
 export const htmlStringToNode = (html) => {
-    let el = document.createElement('div');
+    const el = document.createElement('div');
 
     el.innerHTML = html;
 
@@ -100,6 +114,7 @@ export const htmlStringToNode = (html) => {
 
 /**
  * Prepend source element before first child of target element
+ *
  * @param {Element} parent
  * @param {Element} el
  */
@@ -107,7 +122,10 @@ export const prepend = (parent, el) => {
     parent.insertBefore(el, parent.firstChild);
 };
 
-/** Quick check if element is in DOM */
-export const isElementInDom = (el) => {
-    return el.parentNode;
-};
+/**
+ * Quick check if element is in DOM
+ *
+ * @param {Element} el
+ * @returns {Element|Undefined}
+ */
+export const isElementInDom = el => el.parentNode;

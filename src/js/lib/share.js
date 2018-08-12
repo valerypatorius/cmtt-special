@@ -5,26 +5,27 @@ import * as Analytics from './analytics';
 
 const CSS = {
     likely: 'likely',
-    likelyCustom: 'likely--custom'
+    likelyCustom: 'likely--custom',
 };
 
-export const init = () => {
+const init = () => {
     Likely.initate();
 };
 
 /**
  * Make likely buttons and append to specified element
+ *
  * @param {Element} parentContainer - likely container will be placed here
  * @param {Object} set - object with optional params (title, url, twitter)
  */
-export const make = (parentContainer, set = {}) => {
-    let likelyContainer = makeElement('div', [CSS.likely, CSS.likelyCustom]);
-    let socials = ['facebook', 'vkontakte', 'twitter'];
+const make = (parentContainer, set = {}) => {
+    const likelyContainer = makeElement('div', [CSS.likely, CSS.likelyCustom]);
+    const socials = ['facebook', 'vkontakte', 'twitter'];
 
-    socials.forEach(social => {
-        let button = makeElement('div', social);
+    socials.forEach((social, i) => {
+        const button = makeElement('div', social);
 
-        if (social === 'facebook') button.innerHTML = 'Поделиться';
+        if (i === 0) button.innerHTML = 'Поделиться';
 
         button.addEventListener('click', () => {
             Analytics.sendEvent(`Share ${social}`);
@@ -40,4 +41,9 @@ export const make = (parentContainer, set = {}) => {
     if (set.title) likelyContainer.dataset.title = set.title;
 
     init();
+};
+
+export default {
+    init,
+    make,
 };

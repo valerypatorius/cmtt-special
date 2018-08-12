@@ -1,23 +1,26 @@
 /**
  * Simple images preload
- * @param {Array} urls - array of urls
+ *
+ * @param {Array} urls - Array of urls
  */
 export const preloadImages = (urls) => {
-    urls.forEach(url => {
-        let image = new Image();
+    urls.forEach((url) => {
+        const image = new Image();
         image.src = url;
     });
 };
 
 /**
  * Decline russian words
+ *
  * @param {Number} number
- * @param {Array} words - array of 3 words (e.g. ['машина','машины','машин'])
+ * @param {Array} words - Array of 3 words (e.g. ['машина', 'машины', 'машин'])
+ * @returns {String}
  */
 export const declineWord = (number, words) => {
     let result = number + '&nbsp;';
 
-    if (number % 10 == 1 && number % 100 != 11) {
+    if (number % 10 === 1 && number % 100 !== 11) {
         result += words[0];
     } else if ([2, 3, 4].indexOf(number % 10) > -1 && [12, 13, 14].indexOf(number % 100) < 0) {
         result += words[1];
@@ -30,58 +33,66 @@ export const declineWord = (number, words) => {
 
 /**
  * Format large numbers
+ *
  * @param {Number} number
- * @param {String} string - string between thousands. Non-breaking space by default
+ * @param {String} string - String between thousands. Non-breaking space by default
+ * @returns {String}
  */
-export const formatNumber = (number, string = '&nbsp;') => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, string);
-};
+export const formatNumber = (number, string = '&nbsp;') => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, string);
 
 /**
  * Scroll window to target element
+ *
  * @param {Element} element
- * @param {Number} offset - offset from top
+ * @param {Number} offset - Offset from top screen edge
  */
 export const scrollToElement = (element, offset = 0) => {
-    let y = element.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - offset;
+    const y = element.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - offset;
 
     window.scroll(0, y);
 
-    // Uncomment when using native smooth scroll with smoothscroll-polyfill
+    // Uncomment when using native smooth scroll (or smoothscroll-polyfill)
     // window.scroll({ top: y, left: 0, behavior: 'smooth' });
 };
 
 /**
- * Copy certain string to clipboard
- * @param {String} string - string to copy
- * @param {Function} callback - fired whether command was successful or not
+ * Copy given string to clipboard
+ *
+ * @param {String} string - String to copy
+ * @returns {Promise}
  */
-export const copyToClipboard = (string, callback) => {
-    let input = document.createElement('textarea'),
-        isSuccess = false;
+export const copyToClipboard = (string) => {
+    const input = document.createElement('textarea');
 
     Object.assign(input.style, {
         position: 'fixed',
         top: '0',
         left: '0',
-        opacity: '0'
+        opacity: '0',
     });
 
     input.value = string;
     document.body.appendChild(input);
     input.select();
 
-    try {
-        document.execCommand('copy');
-        isSuccess = true;
-    } catch (e) { }
+    return new Promise((resolve, reject) => {
+        try {
+            console.log(input);
+            document.execCommand('copy');
+            resolve(string);
+        } catch (e) {
+            reject();
+        }
 
-    document.body.removeChild(input);
-
-    callback(isSuccess);
+        document.body.removeChild(input);
+    });
 };
 
-/** Return random number in given range */
-export const getRandomNumber = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-};
+/**
+ * Return random number in given range
+ *
+ * @param {Number} min
+ * @param {Number} max
+ * @returns {Number}
+ */
+export const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);

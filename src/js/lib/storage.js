@@ -1,5 +1,7 @@
 /**
  * Check if localStorage is available
+ *
+ * @returns {Boolean}
  */
 const isAvailable = () => {
     try {
@@ -13,12 +15,14 @@ const isAvailable = () => {
 };
 
 /**
- * Get item from localStorage
+ * Get item from localStorage and try to format it's value
+ *
  * @param {String} key
+ * @returns {*|Null}
  */
-export const getItem = (key) => {
+const getItem = (key) => {
     if (isAvailable()) {
-        let item = window.localStorage.getItem(key);
+        const item = window.localStorage.getItem(key);
 
         try {
             JSON.parse(item);
@@ -28,14 +32,17 @@ export const getItem = (key) => {
 
         return JSON.parse(item);
     }
+
+    return null;
 };
 
 /**
  * Save item in localStorage
+ *
  * @param {String} key
  * @param {String} value
  */
-export const setItem = (key, value) => {
+const setItem = (key, value) => {
     value = (typeof value === 'string') ? value : JSON.stringify(value);
 
     if (isAvailable()) {
@@ -45,10 +52,17 @@ export const setItem = (key, value) => {
 
 /**
  * Remove item from localStorage
+ *
  * @param {String} key
  */
-export const removeItem = (key) => {
+const removeItem = (key) => {
     if (isAvailable()) {
         window.localStorage.removeItem(key);
     }
+};
+
+export default {
+    getItem,
+    setItem,
+    removeItem,
 };

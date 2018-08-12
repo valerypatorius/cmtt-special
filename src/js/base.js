@@ -5,14 +5,15 @@ import * as Analytics from './lib/analytics';
  * Base special constructor with common methods
  */
 class BaseSpecial {
-
     constructor() {
         this.keyCodes = {
-            enter: 13
+            enter: 13,
         };
         this.params = {
-            container: document.body
+            container: document.body,
         };
+
+        Object.assign(this.params, Config);
 
         if (Config.sendPageView) {
             Analytics.sendPageView();
@@ -20,23 +21,24 @@ class BaseSpecial {
     }
 
     /**
-     * Save custom params
-     * @param {Object} params - params object with custom values
+     * Assign additional params
+     *
+     * @param {Object} initParams - Params object
      */
-    saveParams() {
-        Object.assign(this.params, Config);
-        this.container = this.params.container;
-
-        this.addEventListeners();
+    saveParams(initParams) {
+        Object.assign(this.params, initParams);
+        this.container = initParams.container || this.params.container;
     }
 
     /**
-     * Load css file
-     * @param {String} path
+     * Load CSS file
+     *
+     * @param {String} path - CSS file path
+     * @returns {Promise}
      */
     loadStyles(path) {
         return new Promise((resolve, reject) => {
-            let link = document.createElement('link');
+            const link = document.createElement('link');
 
             link.rel = 'stylesheet';
             link.href = path;
@@ -49,22 +51,23 @@ class BaseSpecial {
     }
 
     /**
-     * Add event listeners to document
+     * Add events listeners to container
      */
-    addEventListeners() {
-        this.params.listenedEvents.forEach(eventName => {
+    addEventsListeners() {
+        this.params.listenedEvents.forEach((eventName) => {
             this.container.addEventListener(eventName, event => this.defaultEventHandler(event, eventName));
         });
     }
 
     /**
-     * Default events handler
-     * @param {Object} event
-     * @param {String} eventName
+     * Default event listener
+     *
+     * @param {Object} event - Event object
+     * @param {String} eventName - Event name to listen
      */
     defaultEventHandler(event, eventName) {
-        let target = event.target;
-        let action;
+        let { target } = event;
+        let action = null;
 
         while (target.parentNode && target !== event.currentTarget) {
             action = target.dataset[eventName];
@@ -84,7 +87,6 @@ class BaseSpecial {
             this[action](event.target, event);
         }
     }
-
 }
 
 export default BaseSpecial;

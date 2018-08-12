@@ -3,7 +3,7 @@ import '../css/special.styl';
 import BaseSpecial from './base';
 import Data from './data';
 import Svg from './svg';
-import * as Share from './lib/share';
+import Share from './lib/share';
 import * as Analytics from './lib/analytics';
 import { makeElement } from './lib/dom';
 
@@ -14,9 +14,8 @@ const CSS = {
 class Special extends BaseSpecial {
     constructor(params = {}) {
         super();
-
-        Object.assign(this.params, params);
-        this.saveParams();
+        this.saveParams(params);
+        this.addEventsListeners();
 
         if (Data && params.data) {
             Object.assign(Data, params.data);
@@ -41,19 +40,20 @@ class Special extends BaseSpecial {
      */
 
     /**
-     * Клики слушаются чаще всего. Просто добавляем атрибут data-click с названием функции-обработчика
+     * Клики слушаются чаще всего.
+     * Просто добавляем атрибут data-click с названием функции-обработчика
      */
     demoButton() {
         return makeElement('button', CSS.main + '__button', {
             type: 'button',
             textContent: 'Кнопка',
             data: {
-                click: 'demoClickHandler'
-            }
+                click: 'demoClickHandler',
+            },
         });
     }
 
-    demoClickHandler(el, event) {
+    demoClickHandler(el) {
         console.log('Click on element', el);
 
         /**
@@ -73,12 +73,12 @@ class Special extends BaseSpecial {
             type: 'text',
             placeholder: 'Поле ввода',
             data: {
-                input: 'demoInputWatcher'
-            }
+                input: 'demoInputWatcher',
+            },
         });
     }
 
-    demoInputWatcher(el, event) {
+    demoInputWatcher(el) {
         console.log('Input value:', el.value);
     }
 }

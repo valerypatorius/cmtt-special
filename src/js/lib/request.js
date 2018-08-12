@@ -1,13 +1,29 @@
 /**
+ * Convert data object to FormData object
+ *
+ * @param {Object} data
+ * @returns {FormData}
+ */
+const convertToFormData = (data) => {
+    const formdata = new FormData();
+    const keys = Object.keys(data);
+
+    keys.forEach(key => formdata.append(key, data[key]));
+
+    return formdata;
+};
+
+/**
  * XMLHttpRequest
+ *
  * @param {String} url
  * @param {String} type - GET or POST
- * @param {Formdata} data - FormData object
+ * @param {Object} data - data object
+ * @returns {Promise}
  */
-export default (url, type = 'GET', data = '') => {
-
+export default (url, type = 'GET', data = {}) => {
     return new Promise((resolve, reject) => {
-        let request = new XMLHttpRequest();
+        const request = new XMLHttpRequest();
 
         request.open(type, url);
 
@@ -28,7 +44,6 @@ export default (url, type = 'GET', data = '') => {
 
         request.onerror = () => reject(request.statusText);
 
-        request.send(data);
+        request.send(convertToFormData(data));
     });
-
 };

@@ -1,107 +1,107 @@
-const webpack = require('webpack');
-const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+import { DefinePlugin } from 'webpack';
+import { resolve } from 'path';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+import ExtractTextPlugin, { extract } from 'extract-text-webpack-plugin';
+import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
+import Autoprefixer from 'autoprefixer';
 
-import Config from './src/js/config.js';
+import Config from './src/js/config';
 
 const isProduction = process.env.NODE_ENV === 'prod';
 
 const plugins = [
     new ExtractTextPlugin({
-        filename: 'all.css'
+        filename: 'all.css',
     }),
-    new webpack.DefinePlugin({
-        IS_PRODUCTION: JSON.stringify(isProduction)
-    })
-
+    new DefinePlugin({
+        IS_PRODUCTION: JSON.stringify(isProduction),
+    }),
 ];
 
 if (isProduction) {
     plugins.push(...[
         new UglifyJsPlugin({
-            sourceMap: true
-        })
+            sourceMap: true,
+        }),
     ]);
 } else {
     plugins.push(...[
         new BrowserSyncPlugin({
             port: 3000,
             server: {
-                baseDir: './'
+                baseDir: './',
             },
-            https: true,
             ghostMode: false,
             notify: false,
             scrollProportionally: false,
-            cors: true
-        })
+            cors: true,
+        }),
     ]);
 }
 
-module.exports = {
+export default {
     entry: {
-        js: './src/js/index.js'
+        js: [
+            './src/js/index.js',
+        ],
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: resolve(__dirname, 'dist'),
         filename: 'all.js',
         library: Config.name,
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
     },
     module: {
         rules: [{
-                test: /\.js$/,
-                exclude: /node_modules\/(?!(dom7|ssr-window|swiper)\/).*/,
-                use: {
-                    loader: 'babel-loader',
+            test: /\.js$/,
+            exclude: /node_modules\/(?!(dom7|ssr-window|swiper)\/).*/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    cacheDirectory: true,
+                },
+            },
+        },
+        {
+            test: /\.styl$/,
+            exclude: /node_modules/,
+            use: extract({
+                fallback: 'style-loader',
+                use: [{
+                    loader: 'css-loader',
                     options: {
-                        cacheDirectory: true,
-                        presets: [
-                            'env'
+                        url: false,
+                        minimize: isProduction,
+                    },
+                },
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        ident: 'postcss',
+                        sourceMap: true,
+                        plugins: [
+                            Autoprefixer,
                         ],
-                        plugins: ['transform-object-assign']
-                    }
-                }
-            },
-            {
-                test: /\.styl$/,
-                exclude: /node_modules/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [{
-                            loader: 'css-loader',
-                            options: {
-                                url: false,
-                                minimize: isProduction
-                            }
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                ident: 'postcss',
-                                sourceMap: true
-                            }
-                        },
-                        {
-                            loader: 'stylus-loader'
-                        }
-                    ]
-                })
-            },
-            {
-                test: /\.json$/,
-                exclude: /node_modules/
-            }
-        ]
+                    },
+                },
+                {
+                    loader: 'stylus-loader',
+                }],
+            }),
+        },
+        {
+            test: /\.json$/,
+            exclude: /node_modules/,
+        }],
     },
     watch: !isProduction,
     stats: {
         modules: false,
         hash: false,
-        version: false
+        version: false,
     },
     devtool: !isProduction ? 'source-map' : false,
-    plugins
+    plugins,
 };
+
+console.log(Autoprefixer.info());
